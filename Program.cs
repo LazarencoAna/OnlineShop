@@ -1,6 +1,5 @@
 using OnlineShop.DAL.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +12,20 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ShopDbContext>(o => o.UseSqlite($"Data Source=OnlineShop.db"));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("cors",
+       policy =>
+             {
+                 policy.AllowAnyOrigin()
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
+             });
+});
+
 var app = builder.Build();
+
+app.UseCors("cors");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -25,6 +37,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
 
 app.MapControllers();
 

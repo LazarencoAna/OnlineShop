@@ -29,7 +29,7 @@ namespace OnlineShop.Controllers
         [HttpGet("{id}")]
         public Product Get(int id)
         {
-            return _shopDbContext.Products.FirstOrDefault(i => i.DeliveryTypeId == id).;
+            return _shopDbContext.Products.FirstOrDefault(i => i.DeliveryTypeId == id);
         }
 
         // POST api/<ProductsController>
