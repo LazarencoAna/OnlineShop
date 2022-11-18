@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineShop.DAL.Context;
 
@@ -10,9 +11,10 @@ using OnlineShop.DAL.Context;
 namespace OnlineShop.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    partial class ShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221108191323_ProductDelivery")]
+    partial class ProductDelivery
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
@@ -47,7 +49,12 @@ namespace OnlineShop.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("DeliveryTypeId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("DeliveryTypes");
                 });
@@ -102,32 +109,13 @@ namespace OnlineShop.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("OnlineShop.DAL.Entities.ProductDeliveryMethod", b =>
-                {
-                    b.Property<int>("ProductDeliveryMethodId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("DeliveryTypeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ProductDeliveryMethodId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductDeliveryMethods");
-                });
-
             modelBuilder.Entity("OnlineShop.DAL.Entities.ProductImage", b =>
                 {
                     b.Property<int>("ProductImageId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("URL")
@@ -151,7 +139,7 @@ namespace OnlineShop.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("ProductId")
+                    b.Property<int?>("ProductId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Quantity")
@@ -176,6 +164,13 @@ namespace OnlineShop.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("OnlineShop.DAL.Entities.DeliveryType", b =>
+                {
+                    b.HasOne("OnlineShop.DAL.Entities.Product", null)
+                        .WithMany("DeliveryTypes")
+                        .HasForeignKey("ProductId");
+                });
+
             modelBuilder.Entity("OnlineShop.DAL.Entities.Product", b =>
                 {
                     b.HasOne("OnlineShop.DAL.Entities.Category", "Category")
@@ -185,36 +180,23 @@ namespace OnlineShop.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("OnlineShop.DAL.Entities.ProductDeliveryMethod", b =>
-                {
-                    b.HasOne("OnlineShop.DAL.Entities.Product", null)
-                        .WithMany("DeliveryMethods")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("OnlineShop.DAL.Entities.ProductImage", b =>
                 {
                     b.HasOne("OnlineShop.DAL.Entities.Product", null)
                         .WithMany("ImagesUrl")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductId");
                 });
 
             modelBuilder.Entity("OnlineShop.DAL.Entities.Stock", b =>
                 {
                     b.HasOne("OnlineShop.DAL.Entities.Product", null)
                         .WithMany("Stock")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductId");
                 });
 
             modelBuilder.Entity("OnlineShop.DAL.Entities.Product", b =>
                 {
-                    b.Navigation("DeliveryMethods");
+                    b.Navigation("DeliveryTypes");
 
                     b.Navigation("ImagesUrl");
 

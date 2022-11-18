@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineShop.BAL.Services.Products;
+using OnlineShop.BAL.Services.Products.Models;
 using OnlineShop.DAL.Context;
 using OnlineShop.DAL.Entities;
 
@@ -10,56 +12,51 @@ namespace OnlineShop.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private ShopDbContext _shopDbContext;
+        private IProductsServices _productService;
 
-        public ProductsController(ShopDbContext shopDbContext)
+        public ProductsController(IProductsServices productService)
         {
-            _shopDbContext = shopDbContext;
+            _productService = productService;
         }
 
         // GET: api/<ProductsController>
         [HttpGet]
-        public IEnumerable<Product> Get()
+        public async Task<ActionResult<IEnumerable<ProductModel>>> Get()
         {
-            var products = _shopDbContext.Products.Where(i => i.Price > 0);
-            return products;
+            var products = await _productService.GetProductsAsync();
+            return Ok(products);
         }
 
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
-        public Product Get(int id)
+        public async Task<ActionResult<ProductModel>> Get(int id)
         {
-            return _shopDbContext.Products.FirstOrDefault(i => i.DeliveryTypeId == id);
+            var product = await _productService.GetProductAsync(id);
+            return Ok(product);
         }
 
         // POST api/<ProductsController>
         [HttpPost]
-        public void Post([FromBody] Product value)
+        public async Task<ActionResult<int>> Post([FromBody] ProductModel product)
         {
-            _shopDbContext.Products.Add(value);
-            _shopDbContext.SaveChanges();
+            var productId = await _productService.AddProductAsync(product);
+            return Ok(productId);
         }
 
         // PUT api/<ProductsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Product value)
+        [HttpPut]
+        public async Task<ActionResult> Put([FromBody] ProductModel product)
         {
-            _shopDbContext.Products.Update(value);
-            _shopDbContext.SaveChanges();
+            await _productService.EditProductAsync(product);
+            return Ok();
         }
 
         // DELETE api/<ProductsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var productToDelete = _shopDbContext.Products.FirstOrDefault(i => i.ProductId == id);
-            if (productToDelete != null)
-            {
-                //delete images
-                productToDelete.IsDeleted = true;
-                _shopDbContext.Products.Update(productToDelete);
-                _shopDbContext.SaveChanges();
-            }
+            await _productService.DeleteProductAsync(id);
+            return Ok();
         }
     }
 }

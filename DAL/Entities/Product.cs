@@ -11,15 +11,12 @@
         public double? VatAmount { get; set; }
         public string Barcode { get; set; }
         public int? CategoryId { get; set; }
-        public int? DeliveryTypeId { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
-
+        public virtual List<ProductDeliveryMethod> DeliveryMethods { get; set; }
         public virtual List<ProductImage> ImagesUrl { get; set; }
         public virtual List<Stock> Stock { get; set; }
         public virtual Category? Category { get; set; }
-        public virtual DeliveryType? DeliveryType { get; set; }
-        
     }
 }

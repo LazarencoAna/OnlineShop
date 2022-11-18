@@ -10,6 +10,7 @@ namespace OnlineShop.DAL.Context
         public DbSet<Category> Categories { get; set; }
         public DbSet<DeliveryType> DeliveryTypes { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<ProductDeliveryMethod> ProductDeliveryMethods { get; set; }
 
         public string DbPath { get; }
         public ShopDbContext(DbContextOptions<ShopDbContext> dbContext) : base(dbContext)
