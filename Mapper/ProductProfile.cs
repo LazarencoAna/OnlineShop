@@ -15,8 +15,12 @@ namespace OnlineShop.Mapper
                 .ReverseMap()
                 .ForMember(d => d.Stocks, opt => opt.MapFrom(src => src.Stock))
                 .ForMember(d => d.DeliveryTypes, opt => opt.MapFrom(src => src.DeliveryMethods))
-                .ForMember(d => d.ImagesUrl, opt => opt.MapFrom(src => src.ImagesUrl == null ? new List<string>() :
-                        src.ImagesUrl.Select(image => image.URL)));
+                .ForMember(d => d.ImagesUrl, opt => opt.MapFrom(src => src.ImagesUrl == null ? new List<ProductImage>() :
+                        src.ImagesUrl.Select(image => new ProductImage
+                        {
+                            URL = image.URL,
+                            ProductImageId = image.ProductImageId
+                        })));
 
             CreateMap<ProductStockModel, Stock>().ReverseMap();
             CreateMap<DeliveryType, ProductDeliveryMethod>().ReverseMap();

@@ -38,7 +38,7 @@ public class ProductsServices : IProductsServices
             _shopDbContext.ProductImages.Add(new ProductImage
             {
                 ProductId = productEntity.ProductId,
-                URL = image
+                URL = image.URL
             });
         });
         await _shopDbContext.SaveChangesAsync();
@@ -131,7 +131,7 @@ public class ProductsServices : IProductsServices
             _shopDbContext.ProductImages.Add(new ProductImage
             {
                 ProductId = product.ProductId,
-                URL = image
+                URL = image.URL
             });
         });
         await _shopDbContext.SaveChangesAsync();
