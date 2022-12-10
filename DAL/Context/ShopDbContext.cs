@@ -13,6 +13,9 @@ namespace OnlineShop.DAL.Context
         public DbSet<ProductDeliveryMethod> ProductDeliveryMethods { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<FavoriteProduct> FavoriteProducts { get; set; }
+        public DbSet<ProductCart> ProductCarts { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<ProductOrder> ProductOrders { get; set; }
 
         public string DbPath { get; }
         public ShopDbContext(DbContextOptions<ShopDbContext> dbContext) : base(dbContext)

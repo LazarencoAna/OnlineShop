@@ -5,5 +5,7 @@
         public int UserId { get; set; }
 
         public virtual List<FavoriteProduct> FavoriteProducts { get; set; }
+        public virtual List<ProductCart> ProductCarts { get; set; }
+        public virtual List<Order> Orders { get; set; }
     }
 }
