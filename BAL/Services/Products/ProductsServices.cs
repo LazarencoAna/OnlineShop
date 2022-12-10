@@ -38,7 +38,7 @@ public class ProductsServices : IProductsServices
             _shopDbContext.ProductImages.Add(new ProductImage
             {
                 ProductId = productEntity.ProductId,
-                URL = image
+                URL = image.URL
             });
         });
         await _shopDbContext.SaveChangesAsync();
@@ -93,23 +93,28 @@ public class ProductsServices : IProductsServices
                 ProductId = productEntity.ProductId
             };
             _shopDbContext.ProductDeliveryMethods.Add(deliveryMethod);
-        });
+        }); 
         await _shopDbContext.SaveChangesAsync();
 
         product.ImagesUrl?.ForEach(image =>
         {
             _shopDbContext.ProductImages.Add(new ProductImage
             {
-                ProductId = productEntity.ProductId,
-                URL = image
+                ProductId = product.ProductId,
+                URL = image.URL
             });
         });
         await _shopDbContext.SaveChangesAsync();
 
-        var stockToRemove = _shopDbContext.Stocks
-            .Where(stock => stock.ProductId == product.ProductId && !product.Stocks.Any(st => st.StockId == stock.StockId));
-        _shopDbContext.Stocks.RemoveRange(stockToRemove);
-        await _shopDbContext.SaveChangesAsync();
+        var stocksId = product.Stocks?.Select(st => st.StockId );
+
+        var stockToRemove = _shopDbContext.Stocks.Where(stock => stock.ProductId == product.ProductId && !stocksId.Any(st => st == stock.StockId)).ToList();
+
+        if(stockToRemove.Any())
+        {
+            _shopDbContext.Stocks.RemoveRange(stockToRemove);
+            await _shopDbContext.SaveChangesAsync();
+        }
 
         product.Stocks?.ForEach(stock =>
         {

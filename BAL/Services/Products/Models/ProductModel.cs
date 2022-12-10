@@ -14,7 +14,7 @@ namespace OnlineShop.BAL.Services.Products.Models
         public string Barcode { get; set; }
         public int? CategoryId { get; set; }
         public virtual List<DeliveryType> DeliveryTypes { get; set; }
-        public virtual List<string> ImagesUrl { get; set; }
+        public virtual List<ProductImage> ImagesUrl { get; set; }
         public virtual List<ProductStockModel> Stocks { get; set; }
     }
 }
