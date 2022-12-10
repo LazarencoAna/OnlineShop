@@ -58,5 +58,29 @@ namespace OnlineShop.Controllers
             await _productService.DeleteProductAsync(id);
             return Ok();
         }
+
+        // ADD PRODUCT TO FAVORITE api/<ProductsController>/5
+        [HttpPost("favorite/{id}")]
+        public async Task<ActionResult> AddProductFavorite(int id, int userId)
+        {
+            await _productService.AddProductFavoriteAsync(id, userId);
+            return Ok();
+        }
+
+        // DELETE PRODUCT TO FAVORITE api/<ProductsController>/5
+        [HttpDelete("favorite/{id}")]
+        public async Task<ActionResult> DeleteProductFavorite(int id, int userId)
+        {
+            await _productService.DeleteProductFavorite(id, userId);
+            return Ok();
+        }
+
+        // DELETE PRODUCT TO FAVORITE api/<ProductsController>/5
+        [HttpGet("favorite/{userId}")]
+        public async Task<ActionResult> GetFavoriteProducts(int userId)
+        {
+            var products = await _productService.GetFavoriteProductAsync(userId);
+            return Ok(products);
+        }
     }
 }

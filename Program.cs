@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using AutoMapper.EquivalencyExpression;
 using OnlineShop.BAL.Services.Products;
+using OnlineShop.BAL.Services.Users;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddAutoMapper(config => config.AddCollectionMappers(), Assembly.GetExecutingAssembly());
 builder.Services.AddTransient<IProductsServices, ProductsServices>();
+builder.Services.AddTransient<IUserServices, UserServices>();
 
 var app = builder.Build();
 

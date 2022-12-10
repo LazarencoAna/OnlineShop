@@ -75,6 +75,36 @@ public class ProductsServices : IProductsServices
         await _shopDbContext.SaveChangesAsync();
     }
 
+    public async Task DeleteProductFavorite(int productIdint, int userId)
+    {
+        var favoriteProduct = _shopDbContext.FavoriteProducts.FirstOrDefault(item => item.UserId == userId && item.ProductId == productIdint);
+
+        if (favoriteProduct != null)
+        {
+            _shopDbContext.FavoriteProducts.Remove(favoriteProduct);
+        }
+
+        await _shopDbContext.SaveChangesAsync();
+    }
+
+    public async Task AddProductFavoriteAsync(int productId, int userId)
+    {
+        _shopDbContext.FavoriteProducts.Add(new FavoriteProduct()
+        {
+            UserId = userId,
+            ProductId = productId,
+        });
+
+        await _shopDbContext.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<ProductModel>> GetFavoriteProductAsync(int userId)
+    {
+        var favoriteProducts = await _shopDbContext.FavoriteProducts.Where(item => item.UserId == userId).Include(i => i.Product).ToListAsync();
+        var products = favoriteProducts.Select(item => item.Product);
+        return _mapper.Map<IEnumerable<ProductModel>>(products);
+    }
+
     public async Task EditProductAsync(ProductModel product)
     {
         var productEntity = _mapper.Map<Product>(product);
@@ -93,7 +123,7 @@ public class ProductsServices : IProductsServices
                 ProductId = productEntity.ProductId
             };
             _shopDbContext.ProductDeliveryMethods.Add(deliveryMethod);
-        }); 
+        });
         await _shopDbContext.SaveChangesAsync();
 
         product.ImagesUrl?.ForEach(image =>
@@ -106,11 +136,11 @@ public class ProductsServices : IProductsServices
         });
         await _shopDbContext.SaveChangesAsync();
 
-        var stocksId = product.Stocks?.Select(st => st.StockId );
+        var stocksId = product.Stocks?.Select(st => st.StockId);
 
         var stockToRemove = _shopDbContext.Stocks.Where(stock => stock.ProductId == product.ProductId && !stocksId.Any(st => st == stock.StockId)).ToList();
 
-        if(stockToRemove.Any())
+        if (stockToRemove.Any())
         {
             _shopDbContext.Stocks.RemoveRange(stockToRemove);
             await _shopDbContext.SaveChangesAsync();
