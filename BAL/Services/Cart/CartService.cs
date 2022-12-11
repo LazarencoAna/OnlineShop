@@ -19,7 +19,7 @@ namespace OnlineShop.BAL.Services.Cart
 
         public async Task AddCartItemAsync(CartItemModel cartItem, string username)
         {
-            var existedCartItem = await _shopDbContext.CartItems.FirstOrDefaultAsync(item => item.Username == username && item.ProductId == cartItem.ProductId && item.Size == cartItem.Size);
+            var existedCartItem = await _shopDbContext.CartItems.FirstOrDefaultAsync(item => item.UserAccountId == username && item.ProductId == cartItem.ProductId && item.Size == cartItem.Size);
 
             if (existedCartItem is not null)
             {
@@ -33,7 +33,7 @@ namespace OnlineShop.BAL.Services.Cart
                     ProductId = cartItem.ProductId,
                     Size = cartItem.Size,
                     Quantity = cartItem.Quantity,
-                    Username = username
+                    UserAccountId = username
                 });
             }
             await _shopDbContext.SaveChangesAsync();
@@ -41,7 +41,7 @@ namespace OnlineShop.BAL.Services.Cart
 
         public async Task RemoveCartItemAsync(CartItemModel cartItem, string username)
         {
-            var existedCartItem = await _shopDbContext.CartItems.FirstOrDefaultAsync(item => item.Username == username && item.ProductId == cartItem.ProductId && item.Size == cartItem.Size);
+            var existedCartItem = await _shopDbContext.CartItems.FirstOrDefaultAsync(item => item.UserAccountId == username && item.ProductId == cartItem.ProductId && item.Size == cartItem.Size);
 
             if (existedCartItem is not null)
             {
@@ -52,7 +52,7 @@ namespace OnlineShop.BAL.Services.Cart
 
         public async Task<List<CartItemModel>> GetCartItemsAsync(string username)
         {
-            var dbCartItems = await _shopDbContext.CartItems.Where(item => item.Username == username).ToListAsync();
+            var dbCartItems = await _shopDbContext.CartItems.Where(item => item.UserAccountId == username).ToListAsync();
             var cartItems = new List<CartItemModel>();
             foreach (var item in dbCartItems)
             {

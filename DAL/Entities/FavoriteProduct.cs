@@ -3,7 +3,7 @@
     public class FavoriteProduct
     {
         public int FavoriteProductId { get; set; }
-        public string Userid { get; set; }
+        public string UserAccountId { get; set; }
         public int ProductId { get; set; }
     }
 }

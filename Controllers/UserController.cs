@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineShop.BAL.Services.Users;
+using OnlineShop.DAL.Entities;
+using OnlineShop.Infrastructure.Extensions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -34,9 +37,12 @@ namespace OnlineShop.Controllers
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] string id )
+        [Authorize]
+        public void Post([FromBody] UserAccount userAccount)
         {
-            _userService.AddUserAsync(id);
+            var userId = HttpContext.GetUserId();
+            if (userId == null) return;
+            _userService.UpsertUserAccountAsync(userId, userAccount);
         }
 
         // PUT api/<UserController>/5

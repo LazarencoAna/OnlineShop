@@ -11,7 +11,7 @@ namespace OnlineShop.DAL.Context
         public DbSet<DeliveryType> DeliveryTypes { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductDeliveryMethod> ProductDeliveryMethods { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<UserAccount> UserAccounts { get; set; }
         public DbSet<FavoriteProduct> FavoriteProducts { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<ProductOrder> ProductOrders { get; set; }

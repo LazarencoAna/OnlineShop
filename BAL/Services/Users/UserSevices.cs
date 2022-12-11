@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using OnlineShop.DAL.Context;
+using OnlineShop.DAL.Entities;
 
 namespace OnlineShop.BAL.Services.Users
 {
@@ -14,11 +16,23 @@ namespace OnlineShop.BAL.Services.Users
             _mapper = mapper;
         }
 
-        public async Task<string> AddUserAsync(string id)
+        public async Task<string> UpsertUserAccountAsync(string userId, UserAccount userAccount)
         {
-            _shopDbContext.Users.Add(new DAL.Entities.User() { UserId = id });
+            var euserAccount = await _shopDbContext.UserAccounts.FirstOrDefaultAsync(uc => uc.UserAccountId == userId);
+            if(euserAccount is not null)
+            {
+                euserAccount.Email = userAccount.Email;
+                euserAccount.DisplayName = userAccount.DisplayName;
+                _shopDbContext.UserAccounts.Update(euserAccount);
+            }
+            else
+            {
+                userAccount.UserAccountId = userId;
+                _shopDbContext.UserAccounts.Add(userAccount);
+            }
+           
             await _shopDbContext.SaveChangesAsync();
-            return id;
+            return userId;
         }
     }
 }

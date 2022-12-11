@@ -77,7 +77,7 @@ public class ProductsServices : IProductsServices
 
     public async Task AddProductFavoriteAsync(int productId, string userId)
     {
-        var favoriteProduct = await _shopDbContext.FavoriteProducts.FirstOrDefaultAsync(fp => fp.ProductId == productId && fp.Userid == userId);
+        var favoriteProduct = await _shopDbContext.FavoriteProducts.FirstOrDefaultAsync(fp => fp.ProductId == productId && fp.UserAccountId == userId);
         if (favoriteProduct != null)
         {
             _shopDbContext.FavoriteProducts.Remove(favoriteProduct);
@@ -86,7 +86,7 @@ public class ProductsServices : IProductsServices
         {
             _shopDbContext.FavoriteProducts.Add(new FavoriteProduct()
             {
-                Userid = userId,
+                UserAccountId = userId,
                 ProductId = productId,
             });
         }
@@ -105,7 +105,7 @@ public class ProductsServices : IProductsServices
 
     public async Task<IEnumerable<int>> GetFavoriteProductAsync(string userId)
     {
-        var favoriteProducts = await _shopDbContext.FavoriteProducts.Where(item => item.Userid == userId).ToListAsync();
+        var favoriteProducts = await _shopDbContext.FavoriteProducts.Where(item => item.UserAccountId == userId).ToListAsync();
         var products = favoriteProducts.Select(item => item.ProductId);
         return _mapper.Map<IEnumerable<int>>(products);
     }
