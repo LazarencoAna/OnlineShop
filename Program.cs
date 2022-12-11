@@ -8,6 +8,7 @@ using OnlineShop.BAL.Services.Cart;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OnlineShop.BAL.Services.Order;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => {
+builder.Services.AddSwaggerGen(c =>
+{
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "JWTToken_Auth_API",
@@ -61,6 +63,7 @@ builder.Services.AddAutoMapper(config => config.AddCollectionMappers(), Assembly
 builder.Services.AddTransient<IProductsServices, ProductsServices>();
 builder.Services.AddTransient<IUserServices, UserServices>();
 builder.Services.AddTransient<ICartService, CartService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(opt =>
