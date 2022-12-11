@@ -16,6 +16,7 @@ namespace OnlineShop.DAL.Context
         public DbSet<ProductCart> ProductCarts { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<ProductOrder> ProductOrders { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
 
         public string DbPath { get; }
         public ShopDbContext(DbContextOptions<ShopDbContext> dbContext) : base(dbContext)
