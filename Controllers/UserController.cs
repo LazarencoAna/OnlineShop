@@ -34,7 +34,7 @@ namespace OnlineShop.Controllers
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] int id )
+        public void Post([FromBody] string id )
         {
             _userService.AddUserAsync(id);
         }

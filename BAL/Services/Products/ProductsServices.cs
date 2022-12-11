@@ -75,34 +75,39 @@ public class ProductsServices : IProductsServices
         await _shopDbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteProductFavorite(int productIdint, int userId)
+    public async Task AddProductFavoriteAsync(int productId, string userId)
     {
-        var favoriteProduct = _shopDbContext.FavoriteProducts.FirstOrDefault(item => item.UserId == userId && item.ProductId == productIdint);
-
+        var favoriteProduct = await _shopDbContext.FavoriteProducts.FirstOrDefaultAsync(fp => fp.ProductId == productId && fp.Userid == userId);
         if (favoriteProduct != null)
         {
             _shopDbContext.FavoriteProducts.Remove(favoriteProduct);
         }
-
-        await _shopDbContext.SaveChangesAsync();
-    }
-
-    public async Task AddProductFavoriteAsync(int productId, int userId)
-    {
-        _shopDbContext.FavoriteProducts.Add(new FavoriteProduct()
+        else
         {
-            UserId = userId,
-            ProductId = productId,
-        });
+            _shopDbContext.FavoriteProducts.Add(new FavoriteProduct()
+            {
+                Userid = userId,
+                ProductId = productId,
+            });
+        }
 
-        await _shopDbContext.SaveChangesAsync();
+        try
+        {
+            await _shopDbContext.SaveChangesAsync();
+
+        }
+        catch (Exception e)
+        {
+
+            throw e ;
+        }
     }
 
-    public async Task<IEnumerable<ProductModel>> GetFavoriteProductAsync(int userId)
+    public async Task<IEnumerable<int>> GetFavoriteProductAsync(string userId)
     {
-        var favoriteProducts = await _shopDbContext.FavoriteProducts.Where(item => item.UserId == userId).Include(i => i.Product).ToListAsync();
-        var products = favoriteProducts.Select(item => item.Product);
-        return _mapper.Map<IEnumerable<ProductModel>>(products);
+        var favoriteProducts = await _shopDbContext.FavoriteProducts.Where(item => item.Userid == userId).ToListAsync();
+        var products = favoriteProducts.Select(item => item.ProductId);
+        return _mapper.Map<IEnumerable<int>>(products);
     }
 
     public async Task EditProductAsync(ProductModel product)

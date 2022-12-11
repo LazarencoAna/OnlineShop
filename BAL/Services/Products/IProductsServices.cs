@@ -14,10 +14,8 @@ namespace OnlineShop.BAL.Services.Products
 
         Task DeleteProductAsync(int productId);
 
-        Task AddProductFavoriteAsync(int productId, int userId);
+        Task AddProductFavoriteAsync(int productId, string userId);
 
-        Task DeleteProductFavorite(int productIdint, int userId);
-
-        Task<IEnumerable<ProductModel>> GetFavoriteProductAsync(int userId);
+        Task<IEnumerable<int>> GetFavoriteProductAsync(string userId);
     }
 }

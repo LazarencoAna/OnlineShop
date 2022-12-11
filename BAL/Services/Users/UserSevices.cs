@@ -14,7 +14,7 @@ namespace OnlineShop.BAL.Services.Users
             _mapper = mapper;
         }
 
-        public async Task<int> AddUserAsync(int id)
+        public async Task<string> AddUserAsync(string id)
         {
             _shopDbContext.Users.Add(new DAL.Entities.User() { UserId = id });
             await _shopDbContext.SaveChangesAsync();

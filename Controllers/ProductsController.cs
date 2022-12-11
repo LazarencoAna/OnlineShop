@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineShop.BAL.Services.Products;
 using OnlineShop.BAL.Services.Products.Models;
 using OnlineShop.DAL.Context;
 using OnlineShop.DAL.Entities;
+using OnlineShop.Infrastructure.Extensions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -61,24 +63,20 @@ namespace OnlineShop.Controllers
 
         // ADD PRODUCT TO FAVORITE api/<ProductsController>/5
         [HttpPost("favorite/{id}")]
-        public async Task<ActionResult> AddProductFavorite(int id, int userId)
+        [Authorize]
+        public async Task<ActionResult> AddProductFavorite(int id)
         {
+            var userId = HttpContext.GetUserId();
             await _productService.AddProductFavoriteAsync(id, userId);
             return Ok();
         }
 
         // DELETE PRODUCT TO FAVORITE api/<ProductsController>/5
-        [HttpDelete("favorite/{id}")]
-        public async Task<ActionResult> DeleteProductFavorite(int id, int userId)
+        [Authorize]
+        [HttpGet("favorite")]
+        public async Task<ActionResult> GetFavoriteProducts()
         {
-            await _productService.DeleteProductFavorite(id, userId);
-            return Ok();
-        }
-
-        // DELETE PRODUCT TO FAVORITE api/<ProductsController>/5
-        [HttpGet("favorite/{userId}")]
-        public async Task<ActionResult> GetFavoriteProducts(int userId)
-        {
+            var userId = HttpContext.GetUserId();
             var products = await _productService.GetFavoriteProductAsync(userId);
             return Ok(products);
         }

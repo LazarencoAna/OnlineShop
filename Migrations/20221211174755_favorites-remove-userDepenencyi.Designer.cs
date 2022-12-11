@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OnlineShop.DAL.Context;
 
@@ -10,9 +11,10 @@ using OnlineShop.DAL.Context;
 namespace OnlineShop.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    partial class ShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221211174755_favorites-remove-userDepenencyi")]
+    partial class favoritesremoveuserDepenencyi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.10");
@@ -90,6 +92,8 @@ namespace OnlineShop.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("FavoriteProductId");
+
+                    b.HasIndex("Userid");
 
                     b.ToTable("FavoriteProducts");
                 });
@@ -274,6 +278,15 @@ namespace OnlineShop.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("OnlineShop.DAL.Entities.FavoriteProduct", b =>
+                {
+                    b.HasOne("OnlineShop.DAL.Entities.User", null)
+                        .WithMany("FavoriteProducts")
+                        .HasForeignKey("Userid")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("OnlineShop.DAL.Entities.Order", b =>
                 {
                     b.HasOne("OnlineShop.DAL.Entities.Product", "Product")
@@ -359,6 +372,8 @@ namespace OnlineShop.Migrations
 
             modelBuilder.Entity("OnlineShop.DAL.Entities.User", b =>
                 {
+                    b.Navigation("FavoriteProducts");
+
                     b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
