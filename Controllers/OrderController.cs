@@ -34,6 +34,13 @@ namespace OnlineShop.Controllers
             return await _orderService.GetOrdersAsync(userId);
         }
 
+        [HttpGet("all")]
+        [Authorize]
+        public async Task<IEnumerable<OrderModel>> GetAll()
+        {
+            return await _orderService.GetAllOrdersAsync();
+        }
+
         [HttpPost("anonymous")]
         public async Task<int> PostAnonymous([FromBody] OrderModel value)
         {

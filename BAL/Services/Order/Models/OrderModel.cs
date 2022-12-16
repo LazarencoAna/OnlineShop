@@ -4,6 +4,8 @@
     {
         public int? OrderId { get; set; }
         public string Email { get; set; }
-        public List<ProductOrderModel> ProductOrders { get; set; }  
+        public List<ProductOrderModel> ProductOrders { get; set; }
+        public DateTime? Created { get; set; }
+        public string? UserAccountId { get; set; }
     }
 }
