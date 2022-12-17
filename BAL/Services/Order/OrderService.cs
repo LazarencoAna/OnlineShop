@@ -77,8 +77,11 @@ namespace OnlineShop.BAL.Services.Order
             var orderEntity = new DAL.Entities.Order
             {
                 Created = DateTime.Now,
+                Address = order?.Address ?? "",
+                DeliveryType = order?.DelType ?? 1,
                 Email = order.Email,
                 UserAccountId = userId,
+
             };
 
             _shopDbContext.Orders.Add(orderEntity);
@@ -93,6 +96,9 @@ namespace OnlineShop.BAL.Services.Order
                     Size = prodOrder.Size,
                     OrderId = orderEntity.OrderId,
                 });
+
+                var stock =_shopDbContext.Stocks.FirstOrDefault(i=> i.ProductId== prodOrder.ProductId&& i.Size== prodOrder.Size);
+                stock.Quantity -= prodOrder.Quantity;
 
                 if (!string.IsNullOrEmpty(userId))
                 {
