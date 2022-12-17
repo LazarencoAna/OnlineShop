@@ -45,6 +45,35 @@ namespace OnlineShop.BAL.Services.Order
             return ordersModel;
         }
 
+        public async Task<IEnumerable<OrderModel>> GetAllOrdersForUserAsync(string userId)
+        {
+            var orders = await _shopDbContext.Orders.Where(o=>o.UserAccountId == userId).Include(o => o.ProductOrders).ToListAsync();
+            var ordersModel = new List<OrderModel>();
+
+            foreach (var order in orders)
+            {
+                var orderModel = new OrderModel
+                {
+                    OrderId = order?.OrderId,
+                    Email = order?.Email,
+                    ProductOrders = new List<ProductOrderModel>(),
+                    Created = order?.Created,
+                    UserAccountId = order?.UserAccountId
+                };
+                foreach (var prodOrder in order.ProductOrders)
+                {
+                    orderModel.ProductOrders.Add(new ProductOrderModel
+                    {
+                        ProductId = prodOrder.ProductId,
+                        Quantity = prodOrder.Quantity,
+                        Size = prodOrder.Size
+                    });
+                }
+                ordersModel.Add(orderModel);
+            }
+            return ordersModel;
+        }
+
         public async Task<IEnumerable<OrderModel>> GetOrdersAsync(string userId)
         {
             var orders = await _shopDbContext.Orders.Where(o => o.UserAccountId == userId).Include(o => o.ProductOrders).ToListAsync();
