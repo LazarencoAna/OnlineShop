@@ -76,13 +76,14 @@ public class ProductsServices : IProductsServices
         {
             return;
         }
-        var dtToRemove = _shopDbContext.ProductDeliveryMethods.Where(pdm => pdm.ProductId == product.ProductId);
-        var imgToRemove = _shopDbContext.ProductImages.Where(pi => pi.ProductId == product.ProductId);
-        var stocksToRemove = _shopDbContext.Stocks.Where(s => s.ProductId == product.ProductId);
-        _shopDbContext.ProductDeliveryMethods.RemoveRange(dtToRemove);
-        _shopDbContext.ProductImages.RemoveRange(imgToRemove);
-        _shopDbContext.Stocks.RemoveRange(stocksToRemove);
-        _shopDbContext.Products.Remove(product);
+        product.IsDeleted=true;
+        //var dtToRemove = _shopDbContext.ProductDeliveryMethods.Where(pdm => pdm.ProductId == product.ProductId);
+        //var imgToRemove = _shopDbContext.ProductImages.Where(pi => pi.ProductId == product.ProductId);
+        //var stocksToRemove = _shopDbContext.Stocks.Where(s => s.ProductId == product.ProductId);
+        //_shopDbContext.ProductDeliveryMethods.RemoveRange(dtToRemove);
+        //_shopDbContext.ProductImages.RemoveRange(imgToRemove);
+        //_shopDbContext.Stocks.RemoveRange(stocksToRemove);
+        //_shopDbContext.Products.Remove(product);
         await _shopDbContext.SaveChangesAsync();
     }
 
@@ -203,6 +204,7 @@ public class ProductsServices : IProductsServices
     public async Task<IEnumerable<ProductModel>> GetProductsAsync()
     {
         var products = await _shopDbContext.Products
+            .Where(p => !p.IsDeleted)
             .Include(p => p.Stock)
             .Include(p => p.ImagesUrl)
             .Include(d => d.DeliveryMethods)
